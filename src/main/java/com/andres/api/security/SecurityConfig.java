@@ -26,8 +26,9 @@ public class SecurityConfig {
         http.csrf().disable(); // Deshabilitar el csrf
         http.formLogin().disable(); // Deshabitar el formulario
         http.authorizeHttpRequests( auth -> {
-           auth.requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll(); // Quitamos la seguridad en las rutas auth
-           auth.anyRequest().authenticated(); // Protegemos las demas rutas
+            auth.requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll(); // Quitamos la seguridad en las rutas auth
+            auth.requestMatchers( "/api/products/**").permitAll(); // Se puede especificar el metodo a permitir o que permita todos
+            auth.anyRequest().authenticated(); // Protegemos las demas rutas
         }).sessionManagement(session -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Declaramos la politicas de session sin ESTADO
                                                                                     // para que se envie el token en casa request
