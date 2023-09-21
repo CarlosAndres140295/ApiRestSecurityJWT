@@ -23,8 +23,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.csrf().disable(); // Deshabilitar el csrf
-        http.formLogin().disable(); // Deshabitar el formulario
+        http.csrf(csrf -> csrf.disable()); // Deshabilitar el csrf
+        http.formLogin(login -> login.disable()); // Deshabitar el formulario
         http.authorizeHttpRequests( auth -> {
             auth.requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll(); // Quitamos la seguridad en las rutas auth
             auth.requestMatchers( "/api/products/**").permitAll(); // Se puede especificar el metodo a permitir o que permita todos

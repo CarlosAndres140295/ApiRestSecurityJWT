@@ -7,6 +7,8 @@ import com.andres.api.product.model.Product;
 import com.andres.api.product.repository.ICategoryRepository;
 import com.andres.api.product.repository.IProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,6 +16,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+
+    private ModelMapper modelMapper;
 
     private final IProductRepository productRepository;
 
@@ -25,23 +29,12 @@ public class ProductService {
         if (category.isEmpty()){
             throw  new IllegalArgumentException("Category not found");
         }
-        Product product = new Product();
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setPrice(request.getPrice());
-        product.setActive(true);
-        product.setImage(request.getImage());
-        product.setCategory(category.get());
+
+        Product product = modelMapper.map(request, Product.class);
 
         product = productRepository.save(product);
 
-        return new ProductResponseDTO(product.getId(),
-                                        product.getName(),
-                                        product.getDescription(),
-                                        product.getPrice(),
-                                        product.getImage(),
-                                        product.getActive(),
-                                        product.getCategory().getName());
+        return modelMapper.map(product, ProductResponseDTO.class);
     }
 
     public void deleteProduct(Long id){
